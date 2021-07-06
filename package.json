@@ -25,7 +25,8 @@
     "qrcode-terminal": "^0.12.0",
     "request": "^2.88.2",
     "tough-cookie": "^4.0.0",
-    "tunnel": "0.0.6",
-    "ws": "^7.5.1"
+    "tunnel": "^0.0.6",
+	"axios": "^0.21.1",
+    "ws": "^7.5.2"
   }
 }

@@ -1,7 +1,9 @@
 name: jd
 on:
+  schedule:
+    - cron: 5 */3 * * *
   watch:
-    types: started 
+    types: started
 jobs:
   build:
     runs-on: Ubuntu-20.04  

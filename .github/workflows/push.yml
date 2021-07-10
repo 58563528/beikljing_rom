@@ -12,15 +12,15 @@ jobs:
         ls
     - name: down
       run: |
-        curl -O https://raw.fastgit.org/JDHelloWorld/jd_scripts/main/jd_necklace_new.js
-        curl -O https://raw.fastgit.org/JDHelloWorld/jd_scripts/main/jd_joy_new.js
-        curl -O https://raw.fastgit.org/smiek2221/scripts/master/JDJRValidator_Pure.js
-        curl -O https://raw.fastgit.org/smiek2221/scripts/master/jd_sign_graphics.js
-        curl -O https://raw.fastgit.org/smiek2221/scripts/master/jd_summer_movement.js
-        curl -O https://raw.fastgit.org/smiek2221/scripts/master/jd_summer_movement_help.js
-        curl -O https://raw.fastgit.org/smiek2221/scripts/master/sign_graphics_validate.js
-        curl -O https://raw.fastgit.org/smiek2221/scripts/master/ZooFaker_Necklace.js
-        curl -O https://raw.fastgit.org/smiek2221/scripts/master/jd_necklace.js
+        curl -O https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/jd_necklace_new.js
+        curl -O https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/jd_joy_new.js
+        curl -O https://raw.githubusercontent.com/smiek2221/scripts/master/JDJRValidator_Pure.js
+        curl -O https://raw.githubusercontent.com/smiek2221/scripts/master/jd_sign_graphics.js
+        curl -O https://raw.githubusercontent.com/smiek2221/scripts/master/jd_summer_movement.js
+        curl -O https://raw.githubusercontent.com/smiek2221/scripts/master/jd_summer_movement_help.js
+        curl -O https://raw.githubusercontent.com/smiek2221/scripts/master/sign_graphics_validate.js
+        curl -O https://raw.githubusercontent.com/smiek2221/scripts/master/ZooFaker_Necklace.js
+        curl -O https://raw.githubusercontent.com/smiek2221/scripts/master/jd_necklace.js
     - name: 'Commit Files'
       id: commit
       run: |

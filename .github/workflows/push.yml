@@ -29,5 +29,9 @@ jobs:
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/sign_graphics_validate.js
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/ZooFaker_Necklace.js
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/jd_necklace.js
-        ls
-        git push -u origin master -f
+    - name: Push Dust
+      uses: ad-m/github-push-action@master
+      with:
+        directory: master
+        github_token: ${{ secrets.PAT }}
+        branch: master

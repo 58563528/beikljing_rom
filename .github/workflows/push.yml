@@ -29,6 +29,7 @@ jobs:
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/sign_graphics_validate.js
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/ZooFaker_Necklace.js
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/jd_necklace.js
+        ls
     - name: 'GitHub Push'
       if: steps.commit.output.status != 'success'
       uses: ad-m/github-push-action@v0.6.0

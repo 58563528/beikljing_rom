@@ -16,6 +16,7 @@ jobs:
       run: |
         curl -O https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/jd_necklace_new.js
         curl -O https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/jd_joy_new.js
+        curl -O https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/githubAction.md
         curl -O https://raw.githubusercontent.com/smiek2221/scripts/master/JDJRValidator_Pure.js
         curl -O https://raw.githubusercontent.com/smiek2221/scripts/master/jd_sign_graphics.js
         curl -O https://raw.githubusercontent.com/smiek2221/scripts/master/jd_summer_movement.js

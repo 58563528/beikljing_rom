@@ -16,7 +16,6 @@
   "author": "jd",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^16.3.0",
     "axios": "^0.21.1",
     "crypto-js": "^4.0.0",
     "date-fns": "^2.22.1",

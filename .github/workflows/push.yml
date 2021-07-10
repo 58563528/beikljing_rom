@@ -10,14 +10,6 @@ jobs:
     - name: Install build dependencies
       run: |
         ls
-    - name: 'Commit Files'
-      id: commit
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git diff --quiet && git diff --staged --quiet || git commit -am 'avoid being suspended'
-        echo ::set-output name=status::success
     - name: down
       run: |
         curl -O https://raw.fastgit.org/JDHelloWorld/jd_scripts/main/jd_necklace_new.js
@@ -29,9 +21,16 @@ jobs:
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/sign_graphics_validate.js
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/ZooFaker_Necklace.js
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/jd_necklace.js
+    - name: 'Commit Files'
+      id: commit
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git diff --quiet && git diff --staged --quiet || git commit -am 'avoid being suspended'
+        echo ::set-output name=status::success
     - name: Push Dust
       uses: ad-m/github-push-action@master
       with:
-        directory: ./
         github_token: ${{ secrets.PAT }}
         branch: master

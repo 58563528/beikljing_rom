@@ -19,6 +19,8 @@ jobs:
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/jd_summer_movement.js
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/jd_summer_movement_help.js
         curl -O https://raw.fastgit.org/smiek2221/scripts/master/sign_graphics_validate.js
+        curl -O https://raw.fastgit.org/smiek2221/scripts/master/ZooFaker_Necklace.js
+        curl -O https://raw.fastgit.org/smiek2221/scripts/master/jd_necklace.js
     - name: push
       run: |
         git push -u origin master -f

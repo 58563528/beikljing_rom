@@ -32,6 +32,6 @@ jobs:
     - name: Push Dust
       uses: ad-m/github-push-action@master
       with:
-        directory: master
+        directory: ./
         github_token: ${{ secrets.PAT }}
         branch: master

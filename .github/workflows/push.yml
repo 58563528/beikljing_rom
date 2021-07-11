@@ -27,7 +27,8 @@ jobs:
         cp -f ./cdle/*_*.js ./
         rm -rf ./cdle
         echo "========= 开始下载Wenmoux的脚本 ========="
-        git clone -b wen https://github.com.cnpmjs.org/Wenmoux/scripts.git ./Wenmoux
+        git clone -b wen https://github.com/Wenmoux/scripts.git ./Wenmoux
+        mv ./Wenmoux/jd/chinnkarahoi_jd_bookshop.js ./jd_bookshopWenmoux.js
         cp -f ./Wenmoux/jd/*_*.js ./
         rm -rf ./Wenmoux
     - name: 'Commit Files'

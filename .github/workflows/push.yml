@@ -14,8 +14,6 @@ jobs:
         ls
     - name: down
       run: |
-        curl -O https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/jd_necklace_new.js
-        curl -O https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/jd_joy_new.js
         curl -O https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/githubAction.md
         echo "========= 开始下载smiek2221的脚本 ========="
         git clone https://github.com/smiek2221/scripts.git  ./smiek2221
@@ -31,6 +29,12 @@ jobs:
         mv ./Wenmoux/jd/chinnkarahoi_jd_bookshop.js ./jd_bookshopWenmoux.js
         cp -f ./Wenmoux/jd/*_*.js ./
         rm -rf ./Wenmoux
+        echo "========= 开始下载JDHelloWorld的脚本 ========="
+        git clone -b wen https://github.com/JDHelloWorld/jd_scripts.git ./JDHelloWorld
+        mv ./JDHelloWorld/githubAction.md ./githubAction.md
+        cp -f ./JDHelloWorld/*_*.js ./
+        cp -f ./JDHelloWorld/*_*.ts ./
+        rm -rf ./JDHelloWorld
     - name: 'Commit Files'
       id: commit
       run: |

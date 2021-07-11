@@ -30,7 +30,7 @@ jobs:
         cp -f ./Wenmoux/jd/*_*.js ./
         rm -rf ./Wenmoux
         echo "========= 开始下载JDHelloWorld的脚本 ========="
-        git clone -b wen https://github.com/JDHelloWorld/jd_scripts.git ./JDHelloWorld
+        git clone -b main https://github.com/JDHelloWorld/jd_scripts.git ./JDHelloWorld
         mv ./JDHelloWorld/githubAction.md ./githubAction.md
         cp -f ./JDHelloWorld/*_*.js ./
         cp -f ./JDHelloWorld/*_*.ts ./

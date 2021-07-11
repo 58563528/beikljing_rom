@@ -28,7 +28,7 @@
 #京东签到图形验证
 14 10 * * * node /scripts/jd_sign_graphics.js >> /scripts/logs/jd_sign_graphics.log 2>&1
 #口袋书店
-1 8,12,18 * * * node /scripts/chinnkarahoi_jd_bookshop.js >> /scripts/logs/chinnkarahoi_jd_bookshop.log 2>&1
+1 8,12,18 * * * node /scripts/jd_bookshopWenmoux.js >> /scripts/logs/jd_bookshopWenmoux.log 2>&1
 #天降红包
 30 7 * * * node /scripts/jd_SplitRedPacket.js >> /scripts/logs/jd_SplitRedPacket.log 2>&1
 #东东乐园

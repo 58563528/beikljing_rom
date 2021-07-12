@@ -4,6 +4,8 @@
 
 并转换JDHelloWorld的ts脚本到js
 
+更改JD_SCRIPTS_URL变量成https://ghproxy.com/github.com/gossh520/jd-v4.git
+
 ## Special thanks to:
 
 * [@cdle](https://github.com/cdle/jd_study)

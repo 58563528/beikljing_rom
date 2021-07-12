@@ -8,8 +8,6 @@
 12 6-23/2 * * * node /scripts/jd_summer_movement.js >> /scripts/logs/jd_summer_movement.log 2>&1
 #燃动夏季_SH助力7.8-8.8
 14/41 7-14 * * * node /scripts/jd_summer_movement_help.js >> /scripts/logs/jd_summer_movement_help.log 2>&1
-#欧洲狂欢杯
-0 10  * * * node /scripts/jd_europeancup.js >> /scripts/logs/jd_europeancup.log 2>&1
 #7月粉丝互动
 1 8 * * * node /scripts/jd_wxFans.js >> /scripts/logs/jd_wxFans.log 2>&1
 #愤怒的锦鲤

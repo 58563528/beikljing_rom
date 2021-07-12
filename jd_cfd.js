@@ -2,6 +2,13 @@
 /**
  * 京喜财富岛
  * 包含雇佣导游，建议每小时1次
+ *
+ * 此版本暂定默认帮助HelloWorld，帮助助力池
+ * export CFD_HELP_HW = true    // 帮助HelloWorld
+ * export CFD_HELP_POOL = true  // 帮助助力池
+ *
+ * 使用jd_env_copy.js同步js环境变量到ts
+ * 使用jd_ts_test.ts测试环境变量
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -39,16 +46,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
+};
 exports.__esModule = true;
 var date_fns_1 = require("date-fns");
 var axios_1 = require("axios");
 var TS_USER_AGENTS_1 = require("./TS_USER_AGENTS");
+var dotenv = require("dotenv");
 var CryptoJS = require('crypto-js');
+dotenv.config();
 var appId = 10028, fingerprint, token, enCryptMethodJD;
 var cookie = '', cookiesArr = [], res = '', shareCodes = [];
+var CFD_HELP_HW = process.env.CFD_HELP_HW ? process.env.CFD_HELP_HW : "true";
+console.log('帮助HelloWorld:', CFD_HELP_HW);
+var CFD_HELP_POOL = process.env.CFD_HELP_POOL ? process.env.CFD_HELP_POOL : "true";
+console.log('帮助助力池:', CFD_HELP_POOL);
 var UserName, index, isLogin, nickName;
 !(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var i, tasks, _i, _a, e, employ, _b, _c, t, _d, _e, b, i, j;
+    var i, tasks, _i, _a, e, employ, _b, _c, t, _d, _e, b, data, i, j;
     return __generator(this, function (_f) {
         switch (_f.label) {
             case 0: return [4 /*yield*/, requestAlgo()];
@@ -66,16 +84,13 @@ var UserName, index, isLogin, nickName;
                 index = i + 1;
                 isLogin = true;
                 nickName = '';
-                return [4 /*yield*/, TotalBean()];
-            case 4:
-                _f.sent();
                 console.log("\n\u5F00\u59CB\u3010\u4EAC\u4E1C\u8D26\u53F7" + index + "\u3011" + (nickName || UserName) + "\n");
                 return [4 /*yield*/, makeShareCodes()];
-            case 5:
+            case 4:
                 _f.sent();
                 tasks = void 0;
                 return [4 /*yield*/, api('user/EmployTourGuideInfo', '_cfd_t,bizCode,dwEnv,ptag,source,strZone')];
-            case 6:
+            case 5:
                 /*
                  tasks= await api('story/GetActTask', '_cfd_t,bizCode,dwEnv,ptag,source,strZone')
                 for (let t of tasks.Data.TaskList) {
@@ -99,6 +114,10 @@ var UserName, index, isLogin, nickName;
                 // console.log('下船:', res)
                 // 导游
                 res = _f.sent();
+                if (!!res.TourGuideList) return [3 /*break*/, 6];
+                console.log('手动雇佣4个试用导游');
+                return [3 /*break*/, 11];
+            case 6:
                 _i = 0, _a = res.TourGuideList;
                 _f.label = 7;
             case 7:
@@ -190,31 +209,55 @@ var UserName, index, isLogin, nickName;
                 i++;
                 return [3 /*break*/, 3];
             case 31:
-                if (!(cookiesArr.length === shareCodes.length)) return [3 /*break*/, 38];
-                i = 0;
-                _f.label = 32;
+                // 获取随机助力码
+                if (CFD_HELP_HW === 'true') {
+                    shareCodes = __spreadArray(__spreadArray([], shareCodes), [
+                        '845605C0CDB46E027B53DBFD505C152CE2FDBBFB74ABBD8CB9FD0FE0ACC43FF8',
+                        '84A1A690E9AA8B7267F347E319954401BF810183738AA300E8FCFDEE97F12036',
+                        'C533B4DCDAA0EA415CEBC49F13851C2556F2BE27E8D4026713C7D5229A5F0C55',
+                    ]);
+                }
+                if (!(CFD_HELP_POOL === 'true')) return [3 /*break*/, 33];
+                return [4 /*yield*/, axios_1["default"].get('https://api.sharecode.ga/api/jxcfd/20')];
             case 32:
-                if (!(i < cookiesArr.length)) return [3 /*break*/, 38];
-                j = 0;
-                _f.label = 33;
+                data = (_f.sent()).data;
+                console.log('获取到20个随机助力码:', data.data);
+                shareCodes = __spreadArray(__spreadArray([], shareCodes), data.data);
+                return [3 /*break*/, 34];
             case 33:
-                if (!(j < shareCodes.length)) return [3 /*break*/, 37];
-                cookie = cookiesArr[i];
-                return [4 /*yield*/, api('story/helpbystage', '_cfd_t,bizCode,dwEnv,ptag,source,strShareId,strZone', { strShareId: shareCodes[j] })];
+                console.log('你的设置是不帮助助力池！');
+                _f.label = 34;
             case 34:
-                res = _f.sent();
-                console.log(res);
-                return [4 /*yield*/, wait(1000)];
+                i = 0;
+                _f.label = 35;
             case 35:
-                _f.sent();
+                if (!(i < cookiesArr.length)) return [3 /*break*/, 41];
+                j = 0;
                 _f.label = 36;
             case 36:
-                j++;
-                return [3 /*break*/, 33];
+                if (!(j < shareCodes.length)) return [3 /*break*/, 40];
+                cookie = cookiesArr[i];
+                console.log('去助力:', shareCodes[j]);
+                return [4 /*yield*/, api('story/helpbystage', '_cfd_t,bizCode,dwEnv,ptag,source,strShareId,strZone', { strShareId: shareCodes[j] })];
             case 37:
+                res = _f.sent();
+                console.log(res);
+                if (res.sErrMsg === '参数错误') {
+                    console.log('可合理举报错误助力码');
+                }
+                if (res.sErrMsg === '今日助力次数达到上限，明天再来帮忙吧~')
+                    return [3 /*break*/, 40];
+                return [4 /*yield*/, wait(3000)];
+            case 38:
+                _f.sent();
+                _f.label = 39;
+            case 39:
+                j++;
+                return [3 /*break*/, 36];
+            case 40:
                 i++;
-                return [3 /*break*/, 32];
-            case 38: return [2 /*return*/];
+                return [3 /*break*/, 35];
+            case 41: return [2 /*return*/];
         }
     });
 }); })();
@@ -394,42 +437,6 @@ function requireConfig() {
         console.log("\u5171" + cookiesArr.length + "\u4E2A\u4EAC\u4E1C\u8D26\u53F7\n");
         resolve();
     });
-}
-function TotalBean() {
-    var _this = this;
-    return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            axios_1["default"].get('https://me-api.jd.com/user_new/info/GetJDUserInfoUnion', {
-                headers: {
-                    Host: "me-api.jd.com",
-                    Connection: "keep-alive",
-                    Cookie: cookie,
-                    "User-Agent": TS_USER_AGENTS_1["default"],
-                    "Accept-Language": "zh-cn",
-                    "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
-                    "Accept-Encoding": "gzip, deflate, br"
-                }
-            }).then(function (res) {
-                if (res.data) {
-                    var data = res.data;
-                    if (data['retcode'] === "1001") {
-                        isLogin = false; //cookie过期
-                        return;
-                    }
-                    if (data['retcode'] === "0" && data['data'] && data.data.hasOwnProperty("userInfo")) {
-                        nickName = data.data.userInfo.baseInfo.nickname;
-                    }
-                }
-                else {
-                    console.log('京东服务器返回空数据');
-                }
-            })["catch"](function (e) {
-                console.log('Error:', e);
-            });
-            resolve();
-            return [2 /*return*/];
-        });
-    }); });
 }
 function generateFp() {
     var e = "0123456789";

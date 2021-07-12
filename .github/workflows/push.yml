@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install build dependencies
       run: |
-        ls
+        sudo npm install -g typescript
     - name: down
       run: |
         curl -O https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/githubAction.md
@@ -32,7 +32,16 @@ jobs:
         echo "========= 开始下载JDHelloWorld的脚本 ========="
         git clone -b main https://github.com/JDHelloWorld/jd_scripts.git ./JDHelloWorld
         mv ./JDHelloWorld/githubAction.md ./githubAction.md
+        sudo npm install
+        echo "========= 开始转换JDHelloWorld的ts ========="
+        tsc ./jd_joy_park.ts
+        tsc ./jd_reward.ts
+        tsc ./jd_wishingPool.ts
+        tsc ./jd_jxmc.ts
+        tsc ./jd_qq_pasture.ts
+        tsc ./jd_cfd.ts
         cp -f ./JDHelloWorld/*_*.js ./
+        cd ./JDHelloWorld
         cp -f ./JDHelloWorld/*_*.ts ./
         rm -rf ./JDHelloWorld
     - name: 'Commit Files'

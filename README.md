@@ -1,2 +1,15 @@
 # jd-v4
-给jdv4拉取运行环境使用
+
+自动拉取下方仓库的京东脚本
+
+并转换JDHelloWorld的ts脚本到js
+
+## Special thanks to:
+
+* [@cdle](https://github.com/cdle/jd_study)
+
+* [@smiek2221](https://github.com/smiek2221/scripts)
+
+* [@Wenmoux](https://github.com/Wenmoux/scripts)
+
+* [@JDHelloWorld](https://github.com/JDHelloWorld/jd_scripts)

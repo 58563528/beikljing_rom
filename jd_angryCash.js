@@ -1,102 +1,135 @@
 /*
-愤怒的锦鲤
-更新时间：2021-7-11
-备注：高速并发请求，专治偷助力。在kois环境变量中填入需要助力的pt_pin，有多个请用@符号连接
-TG学习交流群：https://t.me/cdles
-0 0 * * * https://raw.githubusercontent.com/cdle/jd_study/main/jd_angryKoi.js
+愤怒的现金
+更新时间：2021-7-13
+备注：极速助力，打击黑产盗取现金的犯罪行为。默认向前助力9个账号，若要指定被助力账号，需cashHelpPins环境变量中填入需要助力的pt_pin，有多个请用@符号连接。
+0 0 * * * https://raw.githubusercontent.com/cdle/jd_study/main/jd_angryCash.js
 */
-const $ = new Env("愤怒的锦鲤")
-const JD_API_HOST = 'https://api.m.jd.com/client.action';
+const $ = new Env("愤怒的现金")
 const ua = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random()*4+10)}.${Math.ceil(Math.random()*4)};${randomString(40)}`
-var kois = process.env.kois ?? ""
+const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let cookiesArr = []
-var packets = [];
-
+var pins = process.env.cashHelpPins ?? ""
+var helps = [];
+var tools = [];
 !(async () => {
-    if(!kois){
-        console.log("请在环境变量中填写需要助力的账号")
-    }
-    requireConfig()
+    await requireConfig()
     len = cookiesArr.length
+    if(!pins){
+        console.log("未设置环境变量cashHelpPins，默认助力前9个账号")
+    }
     for (let i = 0; i < len; i++) {
-        cookie = cookiesArr[i]
-        if(!kois){
-            if(i != 0) {
-                break
+        cookie = cookiesArr[i];
+        pin = cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
+        if((!pins && i<9) || (pins && pins.indexOf(pin)!=-1)){
+            data = await requestApi("cash_mob_home", cookie)
+            inviteCode = data?.data?.result?.inviteCode
+            if (inviteCode) {
+                shareDate = data?.data?.result?.shareDate
+                helps.push({inviteCode: inviteCode, key: i})
+                tools.push({success: 0, shareDate:"", cookie: cookie, key: i, shareDate: shareDate})
             }
-            console.log(`默认给账号${i+1}助力`)
-        }else if(kois.indexOf(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])==-1)continue
-        data = await requestApi('h5launch',cookie);
-        switch (data?.data?.result.status) {
-            case 1://火爆
-                continue;
-            case 2://已经发起过
-                break;
-            default:
-                if(data?.data?.result?.redPacketId){
-                    packets.push(data.data.result.redPacketId)
-                }
-                continue;
-        }   
-        data = await requestApi('h5activityIndex',cookie);
-        // console.log(data)
-        switch (data?.data?.code) {
-            case 20002://已达拆红包数量限制
-                break;
-            case 10002://活动正在进行，火爆号
-                break;
-            case 20001://红包活动正在进行，可拆
-                packets.push(data.data.result.redpacketInfo.id)
-                break;
-            default:
-                break;
-        }   
+        } else {
+            tools.push({success: 0, shareDate:"", cookie: cookie, key: i})
+        }
     }
-
-    tools = cookiesArr
-    while (tools.length && packets.length) {
-        var cookie = tools.pop()
-        var packet = packets[0]
-        requestApi('jinli_h5assist',cookie, {"redPacketId": packet}).then(
-            function(data){
-                desc = data?.data?.result?.statusDesc
-                if(desc && desc.indexOf("助力已满")!=-1){
-                    if(packet==packets[0])packets.shift()
-                    tools.unshift(cookie)
-                }else if(!desc){
-                    tools.unshift(cookie)
+    while(tools.length>0 && helps.length>0) {
+        var tool = tools.pop()
+        var cookie = tool.cookie
+        if(!tool.shareDate){
+            requestApi("cash_mob_home", cookie, {}, tool).then(function(data){
+                var tool = data.tool
+                if(data.code === undefined){
+                    tools.unshift(tool)
+                    return
                 }
-                console.log(desc)
-            }
-        )
-        await $.wait(50)        
+                shareDate = data?.data?.result?.shareDate
+                if(!shareDate){
+                    return
+                }
+                tool.shareDate = shareDate
+                help(tool)
+            })
+        }else{
+            help(tool)
+        }
+        await $.wait(20)
     }
-})()  .catch((e) => {
+    await $.wait(10000)
+    
+})().catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
-  })
-  .finally(() => {
+}).finally(() => {
     $.done();
-  })
+})
 
-function requestApi(functionId, cookie, body = {}) {
+function help(tool){
+    var cookie = tool.cookie
+    var inviteCode = helps[0].inviteCode
+    var key = helps[0].key
+    requestApi("cash_mob_assist", cookie, {
+        source: 3,
+        inviteCode: inviteCode,
+        shareDate: tool.shareDate
+    }).then(function(data){
+        console.log(`${tool.key+1}->${key+1}`,data?.data?.bizMsg)
+        switch (data?.data?.bizCode) {
+            case 0: //助力成功
+                tool.success++
+                break;
+            case 210: //您无法为自己助力哦~
+                if(tools.length==0){
+                    console.log("跳出循环")
+                    tool.success = 3
+                }
+                break;
+            case 188: //活动太火爆啦\n看看其他活动吧~'
+                tool.success = 3
+                break
+            case 206: //今日已为Ta助力过啦~
+                break;
+            case 207: //啊哦~今日助力次数用完啦
+                tool.success = 3
+                break
+            case 208: //您来晚啦，您的好友已经领到全部奖励了
+                if(helps[0]?.inviteCode==inviteCode)helps.shift()
+                break;
+            case 106: //你点击的太快啦\n请稍后尝试~
+                break;
+            default:
+                console.log("异常", data)
+                tool.success = 3
+                break;
+        }
+        if(tool.success<3){
+            tools.unshift(tool)
+        }         
+    })
+}
+
+function requestApi(functionId, cookie, body = {}, tool) {
     return new Promise(resolve => {
         $.post({
-            url: `${JD_API_HOST}/api?appid=jd_mp_h5&functionId=${functionId}&loginType=2&client=jd_mp_h5&clientVersion=10.0.5&osVersion=AndroidOS&d_brand=Xiaomi&d_model=Xiaomi`,
+            url: `${JD_API_HOST}?functionId=${functionId}&body=${escape(JSON.stringify(body))}&appid=CashRewardMiniH5Env&appid=9.1.0`,
             headers: {
-                "Cookie": cookie,
-                "origin": "https://h5.m.jd.com",
-                "referer": "https://h5.m.jd.com/babelDiy/Zeus/2NUvze9e1uWf4amBhe1AV6ynmSuH/index.html",
+                'Cookie': cookie,
+                'Accept': '*/*',
+                'Connection': 'keep-alive',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'User-Agent': ua,
+                'Accept-Language': 'zh-Hans-CN;q=1',
+                'Host': 'api.m.jd.com',
                 'Content-Type': 'application/x-www-form-urlencoded',
-                "X-Requested-With": "com.jingdong.app.mall",
-                "User-Agent": ua,
+                'Referer': 'http://wq.jd.com/wxapp/pages/hd-interaction/index/index',
             },
-            body: `body=${escape(JSON.stringify(body))}`,
         }, (_, resp, data) => {
             try {
                 data = JSON.parse(data)
             } catch (e) {
                 $.logErr('Error: ', e, resp)
             } finally {
+                if(tool){
+                    data.tool = tool
+                }
                 resolve(data)
             }
         })
@@ -469,7 +502,7 @@ function Env(t, e) {
         done(t = {}) {
             const e = (new Date).getTime(),
                 s = (e - this.startTime) / 1e3;
-            this.log("", `🔔${this.name}, 结束! 🕛 ${s} 秒`), this.log(), (this.isSurge() || this.isQuanX() || this.isLoon()) && $done(t)
+            this.log("", `🔔${this.name}, 结束! 🕛 ${s-10} 秒`), this.log(), (this.isSurge() || this.isQuanX() || this.isLoon()) && $done(t)
         }
     }(t, e)
 }

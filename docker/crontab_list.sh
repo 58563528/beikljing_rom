@@ -127,8 +127,6 @@
 30 6 * * * node /scripts/jd_goodMorning.js >> /scripts/logs/jd_goodMorning.log 2>&1
 #汪汪乐园每日助力
 30 23 * * * node /scripts/jd_joy_park_help.js >> /scripts/logs/jd_joy_park_help.log 2>&1
-#全民运动会
-1 10 * * * node /scripts/jd_olympicgames.js >> /scripts/logs/jd_olympicgames.log 2>&1
 #送豆得豆
 45 4 * * * node /scripts/jd_sendBeans.js >> /scripts/logs/jd_sendBeans.log 2>&1
 #东东电竞经理

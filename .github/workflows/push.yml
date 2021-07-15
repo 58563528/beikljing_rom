@@ -42,6 +42,7 @@ jobs:
         tsc ./jd_qq_pasture.ts
         tsc ./jd_cfd.ts
         tsc ./jd_cfd_loop.ts
+        tsc .jd_foodRunning.ts
         cd ..
         cp -f ./JDHelloWorld/*_*.js ./
         cp -f ./JDHelloWorld/*_*.ts ./activity

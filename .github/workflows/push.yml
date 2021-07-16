@@ -16,7 +16,7 @@ jobs:
       run: |
         echo "========= 开始下载passerby-b的脚本 ========="
         git clone https://github.com/passerby-b/JDDJ.git  ./passerby-b
-        rm -r ./passerby-b/sendNotify.js /jdCookie.js /index.js  /jd_cfd2.js /jd_dreamFactory2.js /jd_fruit2.js /jddj_cookie.js
+        rm -r ./passerby-b/sendNotify.js jdCookie.js index.js jd_cfd2.js jd_dreamFactory2.js jd_fruit2.js jddj_cookie.js
         cp -f ./passerby-b/*_*.js ./
         rm -rf ./passerby-b
         echo "========= 开始下载smiek2221的脚本 ========="

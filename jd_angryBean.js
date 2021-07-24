@@ -1,6 +1,6 @@
 /*
 真·抢京豆
-更新时间：2021-7-23
+更新时间：2021-7-24
 备注：高速并发抢京豆，专治偷助力。设置环境变量angryBeanPins为指定账号助力，默认不助力。环境变量angryBeanMode可选值priority和speed，默认speed模式。
 TG学习交流群：https://t.me/cdles
 0 0 * * * https://raw.githubusercontent.com/cdle/jd_study/main/jd_angryBean.js
@@ -38,6 +38,7 @@ var mode = $.isNode() ? (process.env.angryBeanMode ? process.env.angryBeanMode :
                     monitor_source: "bean_m_bean_index"
                });
                if (data && data.data && data.data.shareCode) {
+                    console.log(`${Number(i)+1} 可以被助力`)
                     helps.push({
                          id: +i,
                          cookie: cookie,
@@ -46,6 +47,8 @@ var mode = $.isNode() ? (process.env.angryBeanMode ? process.env.angryBeanMode :
                          activityId: data.data.activityMsg.activityId,
                          success: false,
                     })
+               }else{
+                    console.log(`${Number(i)+1} 不可以被助力`)
                }
           }
           tools.push({
@@ -79,7 +82,28 @@ async function open(help) {
                finished.push(help.id)
                return
           } else {
-               open(help)
+               if(mode != "speed"){
+                    await open(help)
+               }else{
+                    open(help)
+               }
+               return
+          }
+     }
+     var helpNum = 0
+     for (let helpId of tool.helps) {
+          if (helpId==help.id) {
+               helpNum++
+          }
+     }
+     if(mode != "speed"){
+          if(helpNum>0){
+               finished.push(help.id)
+               return
+          }
+     } else {
+          if(helpNum>2){
+               finished.push(help.id)
                return
           }
      }
@@ -106,10 +130,6 @@ async function open(help) {
                if(mode=="speed"){
                     if(tool.timeout >= helps.length * 2) {
                          tool.times = maxTimes
-                    }
-               }else{
-                    if(tool.helps.indexOf(help.id)!=-1){
-                         help.success = true
                     }
                }
                if (tool.times < maxTimes) {

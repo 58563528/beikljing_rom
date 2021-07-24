@@ -34,29 +34,43 @@ var mode = $.isNode() ? (process.env.angryBeanMode ? process.env.angryBeanMode :
                times: 0,
                timeout: 0,
           }
-          if (!$.isNode() || pins.indexOf(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]) != -1) {
-               await requestApi('signGroupHit', cookie, {
+          var address = pins.indexOf(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+          if (!$.isNode() || address != -1) {
+               var data = await requestApi('signGroupHit', cookie, {
                     activeType: 2
                });
-               var data = await getTuanInfo(cookie)
-               if (data && data.data && data.data.shareCode) {
-                    console.log(`${Number(i)+1} 可以被助力`)
-                    helps.push({
-                         id: i,
-                         cookie: cookie,
-                         groupCode: data.data.groupCode,
-                         shareCode: data.data.shareCode,
-                         activityId: data.data.activityMsg.activityId,
-                         success: false,
-                    })
-                    tool.helps.add(i)
-                    init.push(i)
+               if (data && data.data && data.data.respCode) {
+                    if (data.data.respCode != "SG100") {
+                         data = await getTuanInfo(cookie)
+                         if (data && data.data && data.data.shareCode) {
+                              console.log(`账号${toChinesNum(i+1)}，准备抢京豆`)
+                              helps.push({
+                                   id: i,
+                                   cookie: cookie,
+                                   groupCode: data.data.groupCode,
+                                   shareCode: data.data.shareCode,
+                                   activityId: data.data.activityMsg.activityId,
+                                   success: false,
+                                   address: address,
+                              })
+                              tool.helps.add(i)
+                              init.push(i)
+                         } else {
+                              console.log(`账号${toChinesNum(i+1)}，异常`)
+                         }
+                    } else {
+                         console.log(`账号${toChinesNum(i+1)}是黑号，快去怼客服吧`)
+                    }
                } else {
-                    console.log(`${Number(i)+1} 不可以被助力`)
+                    console.log(`账号${toChinesNum(i+1)}，登录信息过期了`)
                }
+
           }
           tools.push(tool)
      }
+     helps.sort((i, j) => {
+          return i.address > j.address ? 1 : -1
+     })
      for (let help of helps)
           await open(help)
      while (finished.size != init.length)
